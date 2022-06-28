@@ -1,6 +1,7 @@
 import express from 'express';
 import authRoutes from './AuthRoutes.js';
 import taskRoutes from './TaskRoutes.js';
+import userRoutes from './UserRoutes.js';
 
 const apiRoutes = express.Router();
 
@@ -10,5 +11,6 @@ apiRoutes.get('/', function (req, res, next) {
 
 apiRoutes.use('/auth', authRoutes);
 apiRoutes.use('/tasks', taskRoutes);
+apiRoutes.use('/users', userRoutes);
 
 export default apiRoutes;
