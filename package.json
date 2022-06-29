@@ -25,6 +25,7 @@
   "homepage": "https://github.com/stormsoundar/es6-node-crud#readme",
   "dependencies": {
     "bcrypt": "^5.0.1",
+    "colors": "^1.4.0",
     "cross-env": "^7.0.3",
     "debug": "^4.3.4",
     "dotenv": "^16.0.1",
