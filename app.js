@@ -1,5 +1,6 @@
 import express from 'express';
 import morgan from 'morgan';
+import colors from 'colors';
 import connectDB from './config/db/db.js';
 import { NODE_ENV, PORT } from './loaders/config.js';
 import mainRouter from './routes/index.js';
@@ -27,5 +28,7 @@ app.get('/', (req, res, next) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Server is running in ${NODE_ENV} mode on port ${PORT}`);
+  console.log(
+    `Server is running in ${NODE_ENV} mode on port ${PORT}`.yellow.bold
+  );
 });
