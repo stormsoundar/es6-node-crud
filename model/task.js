@@ -13,6 +13,11 @@ const taskSchema = new mongoose.Schema(
         trim: true,
       },
     ],
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: 'users',
+    },
     starred: {
       type: Boolean,
       enum: ['true', 'false'],
