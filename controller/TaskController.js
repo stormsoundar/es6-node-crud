@@ -10,7 +10,7 @@ const taskController = {};
  *  @access Private
  */
 taskController.createTask = asyncHandler(async (req, res, next) => {
-  const { task, subTasks } = req.body;
+  const { task, subTasks, user } = req.body;
 
   const isExistingTask = await Tasks.findOne({ task });
 
@@ -20,6 +20,7 @@ taskController.createTask = asyncHandler(async (req, res, next) => {
   const createTask = await Tasks.create({
     task,
     subTasks,
+    user,
   });
 
   return res
@@ -33,7 +34,8 @@ taskController.createTask = asyncHandler(async (req, res, next) => {
  *  @access Private
  */
 taskController.listTasks = asyncHandler(async (req, res, next) => {
-  const tasks = await Tasks.find({}).sort('-updatedAt');
+  const { _id } = req.user;
+  const tasks = await Tasks.find({ user: _id }).sort('-updatedAt');
 
   return res.status(httpStatus.OK).send({ success: true, data: tasks });
 });
@@ -45,6 +47,8 @@ taskController.listTasks = asyncHandler(async (req, res, next) => {
  */
 taskController.updateTask = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
+  const { _id } = req.user;
+
   const allowedUpdates = ['task', 'subTasks', 'starred', 'status'];
   const updates = Object.keys(req.body);
 
@@ -60,10 +64,14 @@ taskController.updateTask = asyncHandler(async (req, res, next) => {
       new ErrorResponse('Input field invalid', httpStatus.BAD_REQUEST)
     );
 
-  const updatedTask = await Tasks.findOneAndUpdate({ _id: id }, req.body, {
-    runValidators: true,
-    new: true,
-  });
+  const updatedTask = await Tasks.findOneAndUpdate(
+    { _id: id, user: _id },
+    req.body,
+    {
+      runValidators: true,
+      new: true,
+    }
+  );
 
   if (!updatedTask)
     return next(new ErrorResponse('Task not found', httpStatus.NOT_FOUND));

@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { AUTH_TOKEN_SECRET } from '../loaders/config.js';
 import Users from '../model/user.js';
+import ErrorResponse from '../utils/errorResponse.js';
 import asyncHandler from './asyncHandler.js';
 
 // Protect routes
@@ -20,7 +21,11 @@ export const protect = asyncHandler(async (req, res, next) => {
   // Verify token
   const decoded = jwt.verify(token, AUTH_TOKEN_SECRET);
 
-  req.user = await Users.findOne({ _id: decoded._id });
+  const user = await Users.findOne({ _id: decoded._id });
+
+  if (!user) return next(new ErrorResponse('Unauthorized', 404));
+
+  req.user = user;
 
   next();
 });

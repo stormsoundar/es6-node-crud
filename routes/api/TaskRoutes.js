@@ -1,5 +1,6 @@
 import express from 'express';
 import taskController from '../../controller/TaskController.js';
+import { protect } from '../../middleware/auth.js';
 import { validation } from '../../middleware/validation.js';
 import taskValidation from '../../validations/taskSchema.js';
 
@@ -11,14 +12,15 @@ routes.post(
   taskController.createTask
 );
 
-routes.get('/', taskController.listTasks);
+routes.get('/', protect, taskController.listTasks);
 
 routes.patch(
   '/:id',
+  protect,
   validation(taskValidation.taskUpdateSchema),
   taskController.updateTask
 );
 
-routes.delete('/:id', taskController.deleteTask);
+routes.delete('/:id', protect, taskController.deleteTask);
 
 export default routes;
